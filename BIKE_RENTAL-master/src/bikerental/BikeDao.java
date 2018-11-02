@@ -5,7 +5,6 @@
  */
 package bikerental;
 
-import com.google.gson.Gson;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.eq;
@@ -16,6 +15,7 @@ import org.bson.Document;
  * @author anupongpummok
  */
 public class BikeDao {
+    
     private static MongoCollection<Bike> bikeCol;
     
     public BikeDao() {
@@ -62,4 +62,6 @@ public class BikeDao {
             return false;
         }
     }
+    
+    
 }

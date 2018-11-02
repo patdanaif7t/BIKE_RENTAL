@@ -32,8 +32,8 @@ public class CustomerDao {
         }
     }
     
-    public Customer getCusById(String cusCitizenNumber) {
-        return cusCol.find(eq("cusCitizenNumber", cusCitizenNumber)).first();
+    public Customer getCusById(String cusCitizenId) {
+        return cusCol.find(eq("cusCitizenId", cusCitizenId)).first();
     }
     
     public FindIterable<Customer> GetAllCustomer() {
@@ -52,4 +52,13 @@ public class CustomerDao {
         }
     }
     
+    
+    public static void main(String[] args) {
+                Database.init();
+
+        CustomerDao dao =  new CustomerDao();
+        if(dao.getCusById("1200101755322") == null) {
+            System.out.println("null");
+        }
+    }
 }

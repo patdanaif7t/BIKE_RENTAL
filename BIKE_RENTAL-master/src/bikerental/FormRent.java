@@ -5,17 +5,47 @@
  */
 package bikerental;
 
+import com.mongodb.client.MongoCursor;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author firstx
  */
 public class FormRent extends javax.swing.JFrame {
-
+    ServiceRent service;
+    
     /**
      * Creates new form FormRent
      */
     public FormRent() {
         initComponents();
+        Database.init();
+        service = new ServiceRent();
+        showTable();
+        
+        
+    }
+    
+    public void showTable() {
+        MongoCursor<Bike> cursor = service.getAllBikeItr();
+        
+        String[] column = {"BikeId", "BikeStatus"};
+        
+        DefaultTableModel model = new DefaultTableModel(column, 0);
+        
+        try {
+            while (cursor.hasNext()) {
+                Bike bike = cursor.next();
+                String bikeId = bike.getBikeId();
+                String bikeStatus = bike.getBikeStatus();
+                model.addRow(new Object[]{bikeId, bikeStatus});
+            }
+        } finally {
+            cursor.close();
+        }
+        tableBikeStatus.setModel(model);
+        cursor.close();
     }
 
     /**
@@ -244,6 +274,11 @@ public class FormRent extends javax.swing.JFrame {
         head.add(txtCitizenId, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 390, 157, -1));
 
         txtBikeId.setFont(new java.awt.Font("TH Sarabun New", 0, 24)); // NOI18N
+        txtBikeId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBikeIdActionPerformed(evt);
+            }
+        });
         txtBikeId.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBikeIdKeyReleased(evt);
@@ -363,6 +398,20 @@ public class FormRent extends javax.swing.JFrame {
 
     private void btnRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentActionPerformed
         // TODO add your handling code here:
+        String bikeId = txtBikeId.getText();
+        String citizenId = txtCitizenId.getText();
+        String fName = txtFName.getText();
+        String lName = txtLName.getText();
+        String Tel = txtTel.getText();
+        String rentId = txtRentId.getText();
+        String rentDate = txtRentDate.getText();
+        String returnDate = txtReturnDate.getText();
+        String fee = txtFee.getText();
+        
+        BikeDao bikeDao = new BikeDao();
+        bikeDao.switchStatusById(bikeId, rentId);        
+        
+        
     }//GEN-LAST:event_btnRentActionPerformed
 
     private void txtReturnDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtReturnDateActionPerformed
@@ -376,6 +425,10 @@ public class FormRent extends javax.swing.JFrame {
     private void txtBikeIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBikeIdKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBikeIdKeyReleased
+
+    private void txtBikeIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBikeIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBikeIdActionPerformed
 
     /**
      * @param args the command line arguments

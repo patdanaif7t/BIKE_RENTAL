@@ -6,6 +6,7 @@
 package bikerental;
 
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCursor;
 
 /**
  *
@@ -18,6 +19,12 @@ public class ServiceRent {
     BikeDao bikeDao;
     CustomerDao cusDao;
     InvoiceDao invDao;
+    
+    public ServiceRent() {
+        cusDao = new CustomerDao();
+        bikeDao = new BikeDao();
+        invDao = new InvoiceDao();
+    }
     
     
     public boolean isCitizenIdValid(Customer cus) {
@@ -59,12 +66,24 @@ public class ServiceRent {
         
     }
 
-    public void Rent(String bikeId, String bikeStatus) {
+    public void Rent(String bikeId, String bikeStatus,
+            Customer customer,Invoice invoice) {
+        
         bikeDao.switchStatusById(bikeId, bikeStatus);
+        
+        if (cusDao.getCusById(customer.getCusCitizenId()) == null) {
+                cusDao.addCustomer(customer);
+        }
+        
+        invDao.insertVoice(invoice);
     }
     
     public Bike findBikeById(String bikeId) {
         return bikeDao.getBikeById(bikeId);
+    }
+    
+    public MongoCursor<Bike> getAllBikeItr() {
+        return bikeDao.getAllBike().iterator();
     }
         
 }

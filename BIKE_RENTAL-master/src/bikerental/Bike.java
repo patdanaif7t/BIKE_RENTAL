@@ -13,6 +13,11 @@ public final class Bike {
     private String bikeId;
     private String bikeStatus;
 
+    @Override
+    public String toString() {
+        return "Bike{" + "bikeId=" + bikeId + ", bikeStatus=" + bikeStatus + '}';
+    }
+
     public String getBikeId() {
         return bikeId;
     }
